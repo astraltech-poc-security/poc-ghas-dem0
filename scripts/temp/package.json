@@ -2,6 +2,6 @@
   "name": "temporal-pipeline-script",
   "version": "1.0.0",
   "dependencies": {
-    "axios": "0.18.0"
+    "axios": "0.34.0"
   }
 }
