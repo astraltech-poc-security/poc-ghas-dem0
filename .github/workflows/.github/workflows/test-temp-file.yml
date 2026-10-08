@@ -1,19 +1,29 @@
-name: Test Temporal File Pipeline
+name: Test Temporal File with Git Push
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la pestaña Actions
+
+permissions:
+  contents: write # Permite que la Action haga push al repositorio
 
 jobs:
-  generate-temp-manifest:
+  generate-and-push-manifest:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Generar manifiesto temporal en runtime
+      - name: Crear archivo temporal y hacer Git Push
         run: |
-          mkdir -p temp-runtime
-          echo '{"name":"temp-app","version":"1.0.0","dependencies":{"lodash":"4.17.15"}}' > temp-runtime/package.json
-          echo "Archivo temporal creado exitosamente en el disco del runner:"
-          cat temp-runtime/package.json
+          # 1. Crear carpeta y manifiesto vulnerable
+          mkdir -p temp-git-tracked
+          echo '{"name":"temp-tracked-app","version":"1.0.0","dependencies":{"lodash":"4.17.15"}}' > temp-git-tracked/package.json
+          
+          # 2. Configurar usuario de Git para el commit
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 3. Agregar, commitear y subir a Git
+          git add temp-git-tracked/package.json
+          git commit -m "chore(ci): subir manifiesto temporal desde pipeline"
+          git push origin main
