@@ -1,0 +1,19 @@
+name: Test Temporal File Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  generate-temp-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Generar manifiesto temporal en runtime
+        run: |
+          mkdir -p temp-runtime
+          echo '{"name":"temp-app","version":"1.0.0","dependencies":{"lodash":"4.17.15"}}' > temp-runtime/package.json
+          echo "Archivo temporal creado exitosamente en el disco del runner:"
+          cat temp-runtime/package.json
